@@ -205,12 +205,3 @@ Obs.: Ao executar os testes, a base de dados será apagada. Em um ambiente real,
  O arquivo a ser importado na rota POST '/file' deve ser no formato CSV, separando os campos por ";" e as linhas por quebra de linhas.
 
  Na primeira linha deve conter os títulos das colunas, sendo: "year;title;studios;producers;winner", conforme exemplo presente no diretório /docs/movielist.csv
-
-
-# Build imagem
-docker build -t texo-node -f Dockerfile .
-
-# Iniciar docker apontando porta
-# -d background
-# --rm rebuild
-docker run -d --rm -p 3030:3030 texo-node
