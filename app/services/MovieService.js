@@ -151,7 +151,7 @@ class MovieService {
     async getAnswer() {
         const producers = await this.getWinners();
 
-        let counter = { min: null, max: null };
+        let counter = { min: Infinity, max: 0 };
         let answer = { min: [], max: [] };
 
         producers.forEach(function(producer) {
@@ -159,23 +159,20 @@ class MovieService {
               return;
             }
 
-            let firstAward;
             let lastAward;
 
             producer.awards.forEach(function(year) {
-                if (firstAward === undefined) {
-                    firstAward = year;
+                if (lastAward === undefined) {
                     lastAward = year;
                     return;
                 }
 
-                const minPeriod = (year - lastAward);
-                counter.min = counter.min ?? minPeriod;
+                const period = (year - lastAward);
 
-                if (minPeriod <= counter.min) {
-                    if (minPeriod < counter.min) {
+                if (period <= counter.min) {
+                    if (period < counter.min) {
                         answer.min = [];
-                        counter.min = minPeriod;
+                        counter.min = period;
                     }
 
                     answer.min.push({
@@ -185,24 +182,22 @@ class MovieService {
                         followingWin: year
                     });
                 }
-                lastAward = year;
 
-                const maxPeriod = (year - firstAward);
-                counter.max = counter.max ?? maxPeriod;
-
-                if (maxPeriod >= counter.max) {
-                    if (maxPeriod > counter.max) {
+                if (period >= counter.max) {
+                    if (period > counter.max) {
                         answer.max = [];
-                        counter.max = maxPeriod;
+                        counter.max = period;
                     }
 
                     answer.max.push({
                         producer: producer.name,
                         interval: counter.max,
-                        previousWin: firstAward,
+                        previousWin: lastAward,
                         followingWin: year
                     });
                 }
+
+                lastAward = year;
             });
         });
 
